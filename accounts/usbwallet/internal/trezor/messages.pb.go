@@ -2018,6 +2018,7 @@ type EthereumSignTx struct {
 	DataInitialChunk []byte   `protobuf:"bytes,7,opt,name=data_initial_chunk,json=dataInitialChunk" json:"data_initial_chunk,omitempty"`
 	DataLength       *uint32  `protobuf:"varint,8,opt,name=data_length,json=dataLength" json:"data_length,omitempty"`
 	ChainId          *uint32  `protobuf:"varint,9,opt,name=chain_id,json=chainId" json:"chain_id,omitempty"`
+	Txtype           []byte   `protobuf:"bytes,10,opt,name=txtype" json:"txtype,omitempty"`
 	XXX_unrecognized []byte   `json:"-"`
 }
 
@@ -2087,6 +2088,13 @@ func (m *EthereumSignTx) GetChainId() uint32 {
 		return *m.ChainId
 	}
 	return 0
+}
+
+func (m *EthereumSignTx) GetTxtype() []byte {
+	if m != nil {
+		return m.Txtype
+	}
+	return nil
 }
 
 // *
