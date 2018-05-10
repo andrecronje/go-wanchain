@@ -142,7 +142,7 @@ func (s EIP155Signer) Sender(tx *Transaction) (common.Address, error) {
 	}
 	V := new(big.Int).Sub(tx.data.V, s.chainIdMul)
 	V.Sub(V, big8)
-	log.Info("V", v)
+	log.Info("V", V)
 	return recoverPlain(s.Hash(tx), tx.data.R, tx.data.S, V, true)
 }
 
