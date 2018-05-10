@@ -203,7 +203,7 @@ func (tx *Transaction) EncodeRLP(w io.Writer) error {
 func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 	_, size, _ := s.Kind()
 	d := newOldTransaction()
-	err := s.Decode(&d)
+	err := s.Decode(&d.data)
 	if err == nil {
 		tx.data.Txtype = NORMAL_TX
 		tx.data.AccountNonce = d.data.AccountNonce
