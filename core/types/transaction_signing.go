@@ -25,7 +25,7 @@ import (
 	"github.com/wanchain/go-wanchain/common"
 	"github.com/wanchain/go-wanchain/crypto"
 	"github.com/wanchain/go-wanchain/params"
-	"github.com/wanchain/go-wanchain/log"
+	//"github.com/wanchain/go-wanchain/log"
 )
 
 var (
@@ -161,7 +161,6 @@ func (s EIP155Signer) SignatureValues(tx *Transaction, sig []byte) (R, S, V *big
 // It does not uniquely identify the transaction.
 func (s EIP155Signer) Hash(tx *Transaction) common.Hash {
 	return rlpHash([]interface{}{
-		tx.data.Txtype,
 		tx.data.AccountNonce,
 		tx.data.Price,
 		tx.data.GasLimit,
@@ -252,7 +251,6 @@ func recoverPlain(sighash common.Hash, R, S, Vb *big.Int, homestead bool) (commo
 	}
 	var addr common.Address
 	copy(addr[:], crypto.Keccak256(pub[1:])[12:])
-	log.Info("addr", addr)
 	return addr, nil
 }
 
