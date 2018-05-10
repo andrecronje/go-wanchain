@@ -587,6 +587,9 @@ func (pool *TxPool) validateTx(tx *types.Transaction, local bool) error {
 	// cost == V + GP * GL
 	log.Info("T", "t", tx.Txtype())
 	log.Info("C", "c", pool.currentState.GetBalance(from).Cmp(tx.Cost()))
+	log.Info("F", "f", from)
+	log.Info("B", "b", pool.currentState.GetBalance(from))
+	log.Info("C", "c", tx.Cost())
 	if types.IsNormalTransaction(tx.Txtype()) && pool.currentState.GetBalance(from).Cmp(tx.Cost()) < 0 {
 		return ErrInsufficientFunds
 	}
