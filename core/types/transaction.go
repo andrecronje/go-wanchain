@@ -105,6 +105,17 @@ type txdataMarshaling struct {
 	S            *hexutil.Big
 }
 
+type txdataoldMarshaling struct {
+	AccountNonce hexutil.Uint64
+	Price        *hexutil.Big
+	GasLimit     *hexutil.Big
+	Amount       *hexutil.Big
+	Payload      hexutil.Bytes
+	V            *hexutil.Big
+	R            *hexutil.Big
+	S            *hexutil.Big
+}
+
 func NewTransaction(nonce uint64, to common.Address, amount, gasLimit, gasPrice *big.Int, data []byte) *Transaction {
 	return newTransaction(nonce, &to, amount, gasLimit, gasPrice, data)
 }
@@ -187,7 +198,6 @@ func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 		}
 		err = nil
 		err = s.Decode(&d)
-		log.Info("d")
 		if err == nil {
 			tx.data.Txtype = NORMAL_TX
 			tx.data.AccountNonce = d.AccountNonce
