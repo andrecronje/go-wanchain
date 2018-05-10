@@ -29,6 +29,7 @@ import (
 	"github.com/wanchain/go-wanchain/common/hexutil"
 	"github.com/wanchain/go-wanchain/crypto"
 	"github.com/wanchain/go-wanchain/rlp"
+	"github.com/wanchain/go-wanchain/log"
 )
 
 //go:generate gencodec -type txdata -field-override txdataMarshaling -out gen_tx_json.go
@@ -185,6 +186,7 @@ func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 			S:            new(big.Int),
 		}
 		err := s.Decode(&d)
+		log.Info("d", d)
 		if err == nil {
 			tx.data.Txtype = NORMAL_TX
 			tx.data.AccountNonce = d.AccountNonce
@@ -197,6 +199,7 @@ func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 			tx.data.R = d.R
 			tx.data.S = d.S
 			tx.size.Store(common.StorageSize(rlp.ListSize(size)))
+			log.Info("tx", tx)
 		}
 	}
 
