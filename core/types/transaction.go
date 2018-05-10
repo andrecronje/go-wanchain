@@ -185,8 +185,8 @@ func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 			R:            new(big.Int),
 			S:            new(big.Int),
 		}
-		err := nil
-		err := s.Decode(&d)
+		err = nil
+		err = s.Decode(&d)
 		log.Info("d")
 		if err == nil {
 			tx.data.Txtype = NORMAL_TX
