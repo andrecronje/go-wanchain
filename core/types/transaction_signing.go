@@ -25,6 +25,7 @@ import (
 	"github.com/wanchain/go-wanchain/common"
 	"github.com/wanchain/go-wanchain/crypto"
 	"github.com/wanchain/go-wanchain/params"
+	"github.com/wanchain/go-wanchain/core/types"
 	//"github.com/wanchain/go-wanchain/log"
 )
 
