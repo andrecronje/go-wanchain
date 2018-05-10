@@ -43,15 +43,15 @@ func MakeSigner(config *params.ChainConfig, blockNumber *big.Int) Signer {
 	var signer Signer
 	switch {
 
-	case config.IsEIP155(blockNumber):
-		signer = NewEIP155Signer(config.ChainId)
+	//case config.IsEIP155(blockNumber):
+	//	signer = NewEIP155Signer(config.ChainId)
 
-	case config.IsHomestead(blockNumber):
-		signer = HomesteadSigner{}
+	//case config.IsHomestead(blockNumber):
+	//	signer = HomesteadSigner{}
 
 	default:
-		signer = FrontierSigner{}
-		//signer = NewEIP155Signer(config.ChainId)
+		//signer = FrontierSigner{}
+		signer = NewEIP155Signer(config.ChainId)
 	}
 
 	return signer
@@ -258,9 +258,9 @@ func recoverPlain(sighash common.Hash, R, S, Vb *big.Int, homestead bool) (commo
 func deriveChainId(v *big.Int) *big.Int {
 	if v.BitLen() <= 64 {
 		v := v.Uint64()
-		if v == 27 || v == 28 {
+		/*if v == 27 || v == 28 {
 			return new(big.Int)
-		}
+		}*/
 		return new(big.Int).SetUint64((v - 35) / 2)
 	}
 	v = new(big.Int).Sub(v, big.NewInt(35))
