@@ -48,7 +48,7 @@ func deriveSigner(V *big.Int) Signer {
 	}
 }
 
-type oldTransaction struct {
+type OldTransaction struct {
 	data oldtxdata
 	// caches
 	hash atomic.Value
@@ -212,15 +212,15 @@ func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 		err = s.Decode(&d)
 		if err == nil {
 			tx.data.Txtype = NORMAL_TX
-			tx.data.AccountNonce = d.AccountNonce
-			tx.data.Recipient = d.Recipient
-			tx.data.Payload = d.Payload
-			tx.data.Amount = d.Amount
-			tx.data.GasLimit = d.GasLimit
-			tx.data.Price = d.Price
-			tx.data.V = d.V
-			tx.data.R = d.R
-			tx.data.S = d.S
+			tx.data.AccountNonce = d.data.AccountNonce
+			tx.data.Recipient = d.data.Recipient
+			tx.data.Payload = d.data.Payload
+			tx.data.Amount = d.data.Amount
+			tx.data.GasLimit = d.data.GasLimit
+			tx.data.Price = d.data.Price
+			tx.data.V = d.data.V
+			tx.data.R = d.data.R
+			tx.data.S = d.data.S
 			tx.size.Store(common.StorageSize(rlp.ListSize(size)))
 			log.Info("tx", tx)
 		}
