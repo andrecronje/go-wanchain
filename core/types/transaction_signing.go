@@ -25,6 +25,7 @@ import (
 	"github.com/wanchain/go-wanchain/common"
 	"github.com/wanchain/go-wanchain/crypto"
 	"github.com/wanchain/go-wanchain/params"
+	"github.com/wanchain/go-wanchain/log"
 )
 
 var (
@@ -134,11 +135,14 @@ func (s EIP155Signer) Sender(tx *Transaction) (common.Address, error) {
 	if !tx.Protected() {
 		return HomesteadSigner{}.Sender(tx)
 	}
+	log.Info("tx.ChainId", tx.ChainId())
+	log.Info("s.chainId", s.chainId)
 	if tx.ChainId().Cmp(s.chainId) != 0 {
 		return common.Address{}, ErrInvalidChainId
 	}
 	V := new(big.Int).Sub(tx.data.V, s.chainIdMul)
 	V.Sub(V, big8)
+	log.Info("V", v)
 	return recoverPlain(s.Hash(tx), tx.data.R, tx.data.S, V, true)
 }
 
@@ -251,6 +255,7 @@ func recoverPlain(sighash common.Hash, R, S, Vb *big.Int, homestead bool) (commo
 	}
 	var addr common.Address
 	copy(addr[:], crypto.Keccak256(pub[1:])[12:])
+	log.Info("addr", addr)
 	return addr, nil
 }
 
@@ -258,9 +263,9 @@ func recoverPlain(sighash common.Hash, R, S, Vb *big.Int, homestead bool) (commo
 func deriveChainId(v *big.Int) *big.Int {
 	if v.BitLen() <= 64 {
 		v := v.Uint64()
-		/*if v == 27 || v == 28 {
+		if v == 27 || v == 28 {
 			return new(big.Int)
-		}*/
+		}
 		return new(big.Int).SetUint64((v - 35) / 2)
 	}
 	v = new(big.Int).Sub(v, big.NewInt(35))
