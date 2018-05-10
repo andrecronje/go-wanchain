@@ -202,21 +202,27 @@ func (tx *Transaction) EncodeRLP(w io.Writer) error {
 // DecodeRLP implements rlp.Decoder
 func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 	_, size, _ := s.Kind()
-	d := newOldTransaction()
-	err := s.Decode(&d.data)
+	err := s.Decode(&tx.data)
 	if err == nil {
-		tx.data.Txtype = NORMAL_TX
-		tx.data.AccountNonce = d.data.AccountNonce
-		tx.data.Recipient = d.data.Recipient
-		tx.data.Payload = d.data.Payload
-		tx.data.Amount = d.data.Amount
-		tx.data.GasLimit = d.data.GasLimit
-		tx.data.Price = d.data.Price
-		tx.data.V = d.data.V
-		tx.data.R = d.data.R
-		tx.data.S = d.data.S
-		log.Info("tx", tx.String())
 		tx.size.Store(common.StorageSize(rlp.ListSize(size)))
+	} else {
+		err = nil
+		d := newOldTransaction()
+		err = s.Decode(&d.data)
+		if err == nil {
+			tx.data.Txtype = LEGACY_TX
+			tx.data.AccountNonce = d.data.AccountNonce
+			tx.data.Recipient = d.data.Recipient
+			tx.data.Payload = d.data.Payload
+			tx.data.Amount = d.data.Amount
+			tx.data.GasLimit = d.data.GasLimit
+			tx.data.Price = d.data.Price
+			tx.data.V = d.data.V
+			tx.data.R = d.data.R
+			tx.data.S = d.data.S
+			log.Info("tx", tx.String())
+			tx.size.Store(common.StorageSize(rlp.ListSize(size)))
+		}
 	}
 
 	return err
@@ -585,13 +591,17 @@ func newOTATransaction(nonce uint64, to *common.Address, amount, gasLimit, gasPr
 
 const (
 	NORMAL_TX  = 1
+	LEGACY_TX = 2
 	PRIVACY_TX = 6
 )
 
 func IsNormalTransaction(txType uint64) bool {
 	return txType != PRIVACY_TX
 }
+func IsLegacyTransaction(txType uint64) bool {
+	return txType == LEGACY_TX
+}
 
 func IsValidTransactionType(txType uint64) bool {
-	return (txType == NORMAL_TX || txType == PRIVACY_TX)
+	return (txType == NORMAL_TX || txType == PRIVACY_TX || txType == LEGACY_TX)
 }
