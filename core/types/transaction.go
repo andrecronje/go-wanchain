@@ -174,7 +174,7 @@ func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 		tx.size.Store(common.StorageSize(rlp.ListSize(size)))
 	} else {
 		d := oldtxdata{
-			AccountNonce: nil,
+			AccountNonce: 0,
 			Recipient:    nil,
 			Payload:      nil,
 			Amount:       new(big.Int),
@@ -187,7 +187,7 @@ func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 		err := s.Decode(&d)
 		if err == nil {
 			tx.data.Txtype = NORMAL_TX
-			tx.data.AccountNonce = d.AccountNone
+			tx.data.AccountNonce = d.AccountNonce
 			tx.data.Recipient = d.Recipient
 			tx.data.Payload = d.Payload
 			tx.data.Amount = d.Amount
