@@ -25,7 +25,6 @@ import (
 	"github.com/wanchain/go-wanchain/common"
 	"github.com/wanchain/go-wanchain/crypto"
 	"github.com/wanchain/go-wanchain/params"
-	"github.com/wanchain/go-wanchain/core/types"
 	//"github.com/wanchain/go-wanchain/log"
 )
 
@@ -161,7 +160,7 @@ func (s EIP155Signer) SignatureValues(tx *Transaction, sig []byte) (R, S, V *big
 // Hash returns the hash to be signed by the sender.
 // It does not uniquely identify the transaction.
 func (s EIP155Signer) Hash(tx *Transaction) common.Hash {
-	if (types.IsLegacyTransaction(tx.Txtype())) {
+	if (IsLegacyTransaction(tx.Txtype())) {
 		return rlpHash([]interface{}{
 			tx.data.AccountNonce,
 			tx.data.Price,
