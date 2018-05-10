@@ -48,6 +48,14 @@ func deriveSigner(V *big.Int) Signer {
 	}
 }
 
+type oldTransaction struct {
+	data oldtxdata
+	// caches
+	hash atomic.Value
+	size atomic.Value
+	from atomic.Value
+}
+
 type Transaction struct {
 	data txdata
 	// caches
@@ -152,6 +160,20 @@ func newTransaction(nonce uint64, to *common.Address, amount, gasLimit, gasPrice
 
 	return &Transaction{data: d}
 }
+func newOldTransaction() *OldTransaction {
+	d := oldtxdata{
+		AccountNonce: 0,
+		Recipient:    nil,
+		Payload:      nil,
+		Amount:       new(big.Int),
+		GasLimit:     new(big.Int),
+		Price:        new(big.Int),
+		V:            new(big.Int),
+		R:            new(big.Int),
+		S:            new(big.Int),
+	}
+	return &OldTransaction{data: d}
+}
 
 // ChainId returns which chain id this transaction was signed for (if at all)
 func (tx *Transaction) ChainId() *big.Int {
@@ -185,17 +207,7 @@ func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 	if err == nil {
 		tx.size.Store(common.StorageSize(rlp.ListSize(size)))
 	} else {
-		d := oldtxdata{
-			AccountNonce: 0,
-			Recipient:    nil,
-			Payload:      nil,
-			Amount:       new(big.Int),
-			GasLimit:     new(big.Int),
-			Price:        new(big.Int),
-			V:            new(big.Int),
-			R:            new(big.Int),
-			S:            new(big.Int),
-		}
+		d := newOldTransaction()
 		err = nil
 		err = s.Decode(&d)
 		if err == nil {
