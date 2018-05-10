@@ -202,28 +202,21 @@ func (tx *Transaction) EncodeRLP(w io.Writer) error {
 // DecodeRLP implements rlp.Decoder
 func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 	_, size, _ := s.Kind()
-
-	err := s.Decode(&tx.data)
+	d := newOldTransaction()
+	err := s.Decode(&d)
 	if err == nil {
+		tx.data.Txtype = NORMAL_TX
+		tx.data.AccountNonce = d.data.AccountNonce
+		tx.data.Recipient = d.data.Recipient
+		tx.data.Payload = d.data.Payload
+		tx.data.Amount = d.data.Amount
+		tx.data.GasLimit = d.data.GasLimit
+		tx.data.Price = d.data.Price
+		tx.data.V = d.data.V
+		tx.data.R = d.data.R
+		tx.data.S = d.data.S
+		log.Info("tx", tx)
 		tx.size.Store(common.StorageSize(rlp.ListSize(size)))
-	} else {
-		d := newOldTransaction()
-		err = nil
-		err = s.Decode(&d)
-		if err == nil {
-			tx.data.Txtype = NORMAL_TX
-			tx.data.AccountNonce = d.data.AccountNonce
-			tx.data.Recipient = d.data.Recipient
-			tx.data.Payload = d.data.Payload
-			tx.data.Amount = d.data.Amount
-			tx.data.GasLimit = d.data.GasLimit
-			tx.data.Price = d.data.Price
-			tx.data.V = d.data.V
-			tx.data.R = d.data.R
-			tx.data.S = d.data.S
-			tx.size.Store(common.StorageSize(rlp.ListSize(size)))
-			log.Info("tx", tx)
-		}
 	}
 
 	return err
