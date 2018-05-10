@@ -151,9 +151,38 @@ func (tx *Transaction) EncodeRLP(w io.Writer) error {
 // DecodeRLP implements rlp.Decoder
 func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 	_, size, _ := s.Kind()
+
 	err := s.Decode(&tx.data)
 	if err == nil {
 		tx.size.Store(common.StorageSize(rlp.ListSize(size)))
+	} else {
+		d := oldtxdata{
+			AccountNonce: nonce,
+			Recipient:    to,
+			Payload:      data,
+			Amount:       new(big.Int),
+			GasLimit:     new(big.Int),
+			Price:        new(big.Int),
+			V:            new(big.Int),
+			R:            new(big.Int),
+			S:            new(big.Int),
+		}
+		err := s.Decode(&d)
+		if err == nil {
+			tx.data := txdata{
+				Txtype:       NORMAL_TX,
+				AccountNonce: d.AccountNone,
+				Recipient:    d.Recipient,
+				Payload:      d.Payload,
+				Amount:       d.Amount,
+				GasLimit:     d.GasLimit,
+				Price:        d.Price,
+				V:            d.V,
+				R:            d.R,
+				S:            d.S,
+			}
+			tx.size.Store(common.StorageSize(rlp.ListSize(size)))
+		}
 	}
 
 	return err
