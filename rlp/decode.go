@@ -834,9 +834,9 @@ func (s *Stream) Decode(val interface{}) error {
 // If r does not also implement ByteReader, Stream will do its own
 // buffering.
 func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
-	s.origR = r
+	//s.origR = r
 
-	s.inputLimit = inputLimit
+	//s.inputLimit = inputLimit
 
 	if inputLimit > 0 {
 		s.remaining = inputLimit
@@ -870,6 +870,7 @@ func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 		s.uintbuf = make([]byte, 8)
 	}
 }
+
 func (s *Stream) Clone() *Stream {
 	s2 := new(Stream)
 
