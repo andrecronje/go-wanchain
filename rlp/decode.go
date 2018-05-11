@@ -614,6 +614,7 @@ type Stream struct {
 	stack   []listpos
 
 	origR io.Reader
+	inputLimit uint64
 }
 
 type listpos struct{ pos, size uint64 }
@@ -833,6 +834,7 @@ func (s *Stream) Decode(val interface{}) error {
 // buffering.
 func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 	s.origR = r
+	s.inputLimit = inputLimit
 	if inputLimit > 0 {
 		s.remaining = inputLimit
 		s.limited = true
@@ -867,7 +869,8 @@ func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 }
 
 func (s *Stream) Res() {
-	r = s.origR
+	r := s.origR
+	inputLimit := s.inputLimit
 	// Reset the decoding context.
 	if inputLimit > 0 {
 		s.remaining = inputLimit
