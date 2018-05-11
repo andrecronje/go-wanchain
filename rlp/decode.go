@@ -857,8 +857,6 @@ func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 	}
 	s.r = bufr
 	// Reset the decoding context.
-	s.maxRemaining = s.remaining
-	s.maxLimited = s.limited
 	s.stack = s.stack[:0]
 	s.size = 0
 	s.kind = -1
