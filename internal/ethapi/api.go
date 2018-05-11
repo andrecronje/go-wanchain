@@ -1478,7 +1478,7 @@ func (s *PublicTransactionPoolAPI) ComputeOTAPPKeys(ctx context.Context, address
 // SendRawTransaction will add the signed transaction to the transaction pool.
 // The sender is responsible for signing the transaction and using the correct nonce.
 func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, encodedTx hexutil.Bytes) (common.Hash, error) {
-	tx := new(types.OldTransaction)
+	tx := new(types.Transaction)
 	if err := rlp.DecodeBytes(encodedTx, tx); err != nil {
 		return common.Hash{}, err
 	}
@@ -1486,8 +1486,8 @@ func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, encod
 	if err := rlp.DecodeBytes(encodedTx, tx2); err != nil {
 		return common.Hash{}, err
 	}*/
-	tx2 := tx.Convert()
-	return submitTransaction(ctx, s.b, tx2)
+	//tx2 := tx.Convert()
+	return submitTransaction(ctx, s.b, tx)
 }
 
 // Sign calculates an ECDSA signature for:
