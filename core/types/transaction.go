@@ -208,7 +208,6 @@ func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 	} else {
 		err = nil
 		d := newOldTransaction()
-		log.Info("s.Clone()")
 		s2 := s.Clone()
 		err = s2.Decode(&d.data)
 		if err == nil {

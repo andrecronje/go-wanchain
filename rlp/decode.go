@@ -854,11 +854,7 @@ func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 		}
 	}
 	// Wrap r with a buffer if it doesn't have one.
-	bufr, ok := r.(ByteReader)
-	if !ok {
-		bufr = bufio.NewReader(r)
-	}
-	s.r = bufr
+	s.r = bufio.NewReader(r)
 	// Reset the decoding context.
 	s.stack = s.stack[:0]
 	s.size = 0
@@ -870,6 +866,7 @@ func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 }
 func (s *Stream) Clone() *Stream {
 	s2 := new(Stream)
+
 	s2.Reset(s.origR, s.inputLimit)
 	s2.kind = List
 	s2.size = s.inputLimit
