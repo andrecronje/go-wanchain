@@ -23,7 +23,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"ioutil"
 	"math/big"
 	"reflect"
 	"strings"
@@ -835,11 +834,8 @@ func (s *Stream) Decode(val interface{}) error {
 // If r does not also implement ByteReader, Stream will do its own
 // buffering.
 func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
-	bytes, _ := ioutil.ReadAll(r);
-	tmp := make([]byte, len(bytes))
-	copy(tmp, bytes)
-	r := bytes.NewReader(tmp)
-	s.origR := bytes.NewReader(bytes)
+	s.origR = r
+
 	s.inputLimit = inputLimit
 
 	if inputLimit > 0 {
