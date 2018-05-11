@@ -615,6 +615,7 @@ type Stream struct {
 
 	maxRemaining uint64
 	maxLimited bool
+	origR ByteReader
 }
 
 type listpos struct{ pos, size uint64 }
@@ -851,6 +852,7 @@ func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 		}
 	}
 	// Wrap r with a buffer if it doesn't have one.
+	s.origR = r
 	bufr, ok := r.(ByteReader)
 	if !ok {
 		bufr = bufio.NewReader(r)
@@ -869,9 +871,33 @@ func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 }
 
 func (s *Stream) Res() {
+	r = s.origR
 	// Reset the decoding context.
-	s.remaining = s.maxRemaining
-	s.limited = s.maxLimited
+	if inputLimit > 0 {
+		s.remaining = inputLimit
+		s.limited = true
+	} else {
+		// Attempt to automatically discover
+		// the limit when reading from a byte slice.
+		switch br := r.(type) {
+		case *bytes.Reader:
+			s.remaining = uint64(br.Len())
+			s.limited = true
+		case *strings.Reader:
+			s.remaining = uint64(br.Len())
+			s.limited = true
+		default:
+			s.limited = false
+		}
+	}
+	// Wrap r with a buffer if it doesn't have one.
+	s.origR = r
+	bufr, ok := r.(ByteReader)
+	if !ok {
+		bufr = bufio.NewReader(r)
+	}
+	s.r = bufr
+	// Reset the decoding context.
 	s.stack = s.stack[:0]
 	s.size = 0
 	s.kind = -1
