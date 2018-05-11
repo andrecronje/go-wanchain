@@ -834,7 +834,7 @@ func (s *Stream) Decode(val interface{}) error {
 // If r does not also implement ByteReader, Stream will do its own
 // buffering.
 func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
-	s.origR = r
+	s.origR = bytes.NewBuffer(r.Bytes())
 	s.inputLimit = inputLimit
 
 	if inputLimit > 0 {
@@ -858,10 +858,8 @@ func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 	bufr, ok := r.(ByteReader)
 	if !ok {
 		bufr = bufio.NewReader(r)
-	} else {
-		b, err := s.r.(ByteReader).Reset(s.origR)
 	}
-	s.r = bufr
+	s.r = bufio.NewReader(r)
 	// Reset the decoding context.
 	s.stack = s.stack[:0]
 	s.size = 0
