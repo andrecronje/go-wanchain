@@ -834,7 +834,15 @@ func (s *Stream) Decode(val interface{}) error {
 // If r does not also implement ByteReader, Stream will do its own
 // buffering.
 func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
-	s.origR = r
+	bytes, _ := ioutil.ReadAll(r);
+	tmp := make([]byte, len(bytes))
+	copy(tmp, bytes)
+	s.bytes = bytes
+	s.tmp = tmp
+	r := bytes.NewReader(tmp)
+	s.origR := bytes.NewReader(bytes)
+
+	s.origR := io.TeeReader(r, &buf)
 	s.inputLimit = inputLimit
 
 	if inputLimit > 0 {
