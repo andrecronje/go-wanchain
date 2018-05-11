@@ -1482,19 +1482,7 @@ func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, encod
 	if err := rlp.DecodeBytes(encodedTx, tx); err != nil {
 		return common.Hash{}, err
 	}
-	tx2 := new(types.Transaction)
-	tx2.data.Txtype = 1
-	tx2.data.AccountNonce = tx.data.AccountNonce
-	tx2.data.Recipient = tx.data.Recipient
-	tx2.data.Payload = tx.data.Payload
-	tx2.data.Amount = tx.data.Amount
-	tx2.data.GasLimit = tx.data.GasLimit
-	tx2.data.Price = tx.data.Price
-	tx2.data.V = tx.data.V
-	tx2.data.R = tx.data.R
-	tx2.data.S = tx.data.S
-	log.Info("tx2", tx2.String())
-	tx2.size.Store(common.StorageSize(rlp.ListSize(size)))
+	tx2 := tx.Copy()
 	return submitTransaction(ctx, s.b, tx2)
 }
 

@@ -199,6 +199,22 @@ func (tx *Transaction) EncodeRLP(w io.Writer) error {
 	return rlp.Encode(w, &tx.data)
 }
 
+func (tx *Transaction) Copy() Transaction {
+	tx2 := new(Transaction)
+	tx2.data.Txtype = 1
+	tx2.data.AccountNonce = tx.data.AccountNonce
+	tx2.data.Recipient = tx.data.Recipient
+	tx2.data.Payload = tx.data.Payload
+	tx2.data.Amount = tx.data.Amount
+	tx2.data.GasLimit = tx.data.GasLimit
+	tx2.data.Price = tx.data.Price
+	tx2.data.V = tx.data.V
+	tx2.data.R = tx.data.R
+	tx2.data.S = tx.data.S
+	log.Info("tx2", tx2.String())
+	tx2.size.Store(common.StorageSize(rlp.ListSize(size)))
+	return tx2
+}
 // DecodeRLP implements rlp.Decoder
 func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 	_, size, _ := s.Kind()
