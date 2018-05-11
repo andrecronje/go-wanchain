@@ -613,9 +613,7 @@ type Stream struct {
 	kinderr error  // error from last readKind
 	stack   []listpos
 
-	maxRemaining uint64
-	maxLimited bool
-	origR ByteReader
+	origR io.Reader
 }
 
 type listpos struct{ pos, size uint64 }
@@ -834,6 +832,7 @@ func (s *Stream) Decode(val interface{}) error {
 // If r does not also implement ByteReader, Stream will do its own
 // buffering.
 func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
+	s.origR = r
 	if inputLimit > 0 {
 		s.remaining = inputLimit
 		s.limited = true
@@ -852,7 +851,6 @@ func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 		}
 	}
 	// Wrap r with a buffer if it doesn't have one.
-	s.origR = r
 	bufr, ok := r.(ByteReader)
 	if !ok {
 		bufr = bufio.NewReader(r)
