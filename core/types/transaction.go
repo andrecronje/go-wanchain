@@ -208,7 +208,7 @@ func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 	} else {
 		err = nil
 		d := newOldTransaction()
-		s.Res()
+		s := s.Clone()
 		err = s.Decode(&d.data)
 		if err == nil {
 			tx.data.Txtype = LEGACY_TX
