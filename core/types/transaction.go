@@ -221,6 +221,7 @@ func (tx *OldTransaction) Convert() *Transaction {
 }
 // DecodeRLP implements rlp.Decoder
 func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
+	log.Info("tx")
 	_, size, _ := s.Kind()
 	//s2 := s.Clone()
 	//d := newOldTransaction()
@@ -245,6 +246,16 @@ func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 			tx.size.Store(common.StorageSize(rlp.ListSize(size)))
 		}
 	}*/
+
+	return err
+}
+func (tx *OldTransaction) DecodeRLP(s *rlp.Stream) error {
+	log.Info("otx")
+	_, size, _ := s.Kind()
+	err := s.Decode(&tx.data)
+	if err == nil {
+		tx.size.Store(common.StorageSize(rlp.ListSize(size)))
+	}
 
 	return err
 }
