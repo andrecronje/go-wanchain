@@ -872,7 +872,7 @@ func (s *Stream) Clone() *Stream {
 	s2 := new(Stream)
 	s2.Reset(s.origR, s.inputLimit)
 	s2.kind = List
-	s2.size = len
+	s2.size = s.inputLimit
 	return s2
 }
 
