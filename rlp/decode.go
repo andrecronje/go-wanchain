@@ -870,7 +870,7 @@ func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 }
 func (s *Stream) Clone() *Stream {
 	s2 := new(Stream)
-	s2.Reset(s.r, s.inputLimit)
+	s2.Reset(s.origR, s.inputLimit)
 	return s2
 }
 
