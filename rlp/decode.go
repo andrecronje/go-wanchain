@@ -868,7 +868,7 @@ func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 	}
 }
 
-func (s *Stream) Reset() {
+func (s *Stream) Res() {
 	// Reset the decoding context.
 	s.remaining = s.maxRemaining
 	s.limited = s.maxLimited
