@@ -860,7 +860,7 @@ func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 		bufr = bufio.NewReader(r)
 	}
 	s.r = bufr
-	s.r = s.r.reset(s.origR)
+	s.r = s.r.Reset(s.origR)
 	// Reset the decoding context.
 	s.stack = s.stack[:0]
 	s.size = 0
