@@ -199,7 +199,7 @@ func (tx *Transaction) EncodeRLP(w io.Writer) error {
 	return rlp.Encode(w, &tx.data)
 }
 
-func (tx *Transaction) Copy() *Transaction {
+func (tx *OldTransaction) Convert() *Transaction {
 	tx2 := new(Transaction)
 	tx2.data.Txtype = 1
 	tx2.data.AccountNonce = tx.data.AccountNonce

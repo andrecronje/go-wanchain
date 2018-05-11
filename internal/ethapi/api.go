@@ -1482,7 +1482,7 @@ func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, encod
 	if err := rlp.DecodeBytes(encodedTx, tx); err != nil {
 		return common.Hash{}, err
 	}
-	tx2 := tx.Copy()
+	tx2 := tx.Convert()
 	return submitTransaction(ctx, s.b, tx2)
 }
 
