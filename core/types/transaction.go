@@ -204,7 +204,7 @@ func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 	_, size, _ := s.Kind()
 	err := s.Decode(&tx.data)
 	var s2 *rlp.Stream
-	*s2 = *s
+	s2 = *s
 	if err == nil {
 		tx.size.Store(common.StorageSize(rlp.ListSize(size)))
 	} else {
