@@ -129,7 +129,7 @@ func NewTransaction(nonce uint64, to common.Address, amount, gasLimit, gasPrice 
 }
 
 func NewOldTransaction(nonce uint64, to common.Address, amount, gasLimit, gasPrice *big.Int, data []byte) *OldTransaction {
-	return newOldTransaction(nonce, &to, amount, gasLimit, gasPrice, data)
+	return newOldTransaction()
 }
 
 func NewContractCreation(nonce uint64, amount, gasLimit, gasPrice *big.Int, data []byte) *Transaction {
