@@ -871,6 +871,8 @@ func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 func (s *Stream) Clone() *Stream {
 	s2 := new(Stream)
 	s2.Reset(s.origR, s.inputLimit)
+	s2.kind = List
+	s2.size = len
 	return s2
 }
 
