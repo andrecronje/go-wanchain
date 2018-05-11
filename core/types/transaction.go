@@ -205,7 +205,7 @@ func (tx *Transaction) EncodeRLP(w io.Writer) error {
 
 func (tx *OldTransaction) Convert() *Transaction {
 	tx2 := new(Transaction)
-	tx2.data.Txtype = 1
+	tx2.data.Txtype = LEGACY_TX
 	tx2.data.AccountNonce = tx.data.AccountNonce
 	tx2.data.Recipient = tx.data.Recipient
 	tx2.data.Payload = tx.data.Payload
