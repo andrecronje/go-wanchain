@@ -836,6 +836,7 @@ func (s *Stream) Decode(val interface{}) error {
 func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 	s.origR = r
 	s.inputLimit = inputLimit
+
 	if inputLimit > 0 {
 		s.remaining = inputLimit
 		s.limited = true
@@ -857,10 +858,9 @@ func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 	bufr, ok := r.(ByteReader)
 	if !ok {
 		bufr = bufio.NewReader(r)
-	} else {
-		bufr = s.r.Reset(r)
 	}
 	s.r = bufr
+	s.r = s.r.reset(s.origR)
 	// Reset the decoding context.
 	s.stack = s.stack[:0]
 	s.size = 0
