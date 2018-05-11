@@ -891,7 +891,6 @@ func (s *Stream) Res() {
 		}
 	}
 	// Wrap r with a buffer if it doesn't have one.
-	s.origR = r
 	bufr, ok := r.(ByteReader)
 	if !ok {
 		bufr = bufio.NewReader(r)
