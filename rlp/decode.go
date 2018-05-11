@@ -612,6 +612,9 @@ type Stream struct {
 	byteval byte   // value of single byte in type tag
 	kinderr error  // error from last readKind
 	stack   []listpos
+
+	maxRemaining uint64
+	maxLimited bool
 }
 
 type listpos struct{ pos, size uint64 }
@@ -854,6 +857,21 @@ func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 	}
 	s.r = bufr
 	// Reset the decoding context.
+	s.maxRemaining = s.remaining
+	s.maxLimited = s.limited
+	s.stack = s.stack[:0]
+	s.size = 0
+	s.kind = -1
+	s.kinderr = nil
+	if s.uintbuf == nil {
+		s.uintbuf = make([]byte, 8)
+	}
+}
+
+func (s *Stream) Reset() {
+	// Reset the decoding context.
+	s.remaining = s.maxRemaining
+	s.limited = s.maxLimited
 	s.stack = s.stack[:0]
 	s.size = 0
 	s.kind = -1
