@@ -1480,9 +1480,13 @@ func (s *PublicTransactionPoolAPI) ComputeOTAPPKeys(ctx context.Context, address
 func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, encodedTx hexutil.Bytes) (common.Hash, error) {
 	tx := types.NewOldTransaction()
 	if err := rlp.DecodeBytes(encodedTx, tx); err != nil {
+		//return common.Hash{}, err
+	}
+	tx2 := types.NewTransaction()
+	if err := rlp.DecodeBytes(encodedTx, tx2); err != nil {
 		return common.Hash{}, err
 	}
-	tx2 := tx.Convert()
+	//tx2 := tx.Convert()
 	return submitTransaction(ctx, s.b, tx2)
 }
 
