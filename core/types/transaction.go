@@ -203,12 +203,13 @@ func (tx *Transaction) EncodeRLP(w io.Writer) error {
 func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 	_, size, _ := s.Kind()
 	s2 := s.Clone()
-	err := s.Decode(&tx.data)
+	d := newOldTransaction()
+
+	err := s.Decode(&d.data)
 	if err == nil {
 		tx.size.Store(common.StorageSize(rlp.ListSize(size)))
 	} else {
 		err = nil
-		d := newOldTransaction()
 		err = s2.Decode(&d.data)
 		if err == nil {
 			tx.data.Txtype = LEGACY_TX
