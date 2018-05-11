@@ -128,7 +128,7 @@ func NewTransaction(nonce uint64, to common.Address, amount, gasLimit, gasPrice 
 	return newTransaction(nonce, &to, amount, gasLimit, gasPrice, data)
 }
 
-func NewOldTransaction(nonce uint64, to common.Address, amount, gasLimit, gasPrice *big.Int, data []byte) *OldTransaction {
+func NewOldTransaction() *OldTransaction {
 	return newOldTransaction()
 }
 
