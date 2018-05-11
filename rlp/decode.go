@@ -615,6 +615,7 @@ type Stream struct {
 
 	origR io.Reader
 	inputLimit uint64
+	val interface{}
 }
 
 type listpos struct{ pos, size uint64 }
@@ -867,42 +868,10 @@ func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 		s.uintbuf = make([]byte, 8)
 	}
 }
-
-func (s *Stream) Res() {
-	r := s.origR
-	inputLimit := s.inputLimit
-	// Reset the decoding context.
-	if inputLimit > 0 {
-		s.remaining = inputLimit
-		s.limited = true
-	} else {
-		// Attempt to automatically discover
-		// the limit when reading from a byte slice.
-		switch br := r.(type) {
-		case *bytes.Reader:
-			s.remaining = uint64(br.Len())
-			s.limited = true
-		case *strings.Reader:
-			s.remaining = uint64(br.Len())
-			s.limited = true
-		default:
-			s.limited = false
-		}
-	}
-	// Wrap r with a buffer if it doesn't have one.
-	bufr, ok := r.(ByteReader)
-	if !ok {
-		bufr = bufio.NewReader(r)
-	}
-	s.r = bufr
-	// Reset the decoding context.
-	s.stack = s.stack[:0]
-	s.size = 0
-	s.kind = -1
-	s.kinderr = nil
-	if s.uintbuf == nil {
-		s.uintbuf = make([]byte, 8)
-	}
+func (s *Stream) Clone() *Stream {
+	s2 := new(Stream)
+	s2.Reset(s.r, s.inputLimit)
+	return s2
 }
 
 // Kind returns the kind and size of the next value in the
