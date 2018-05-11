@@ -23,6 +23,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"ioutil"
 	"math/big"
 	"reflect"
 	"strings"
