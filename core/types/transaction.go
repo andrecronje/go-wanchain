@@ -202,7 +202,7 @@ func (tx *Transaction) EncodeRLP(w io.Writer) error {
 // DecodeRLP implements rlp.Decoder
 func (tx *Transaction) DecodeRLP(s *rlp.Stream) error {
 	_, size, _ := s.Kind()
-	*a := *s
+	var *a = *s
 	err := s.Decode(&tx.data)
 	if err == nil {
 		tx.size.Store(common.StorageSize(rlp.ListSize(size)))
