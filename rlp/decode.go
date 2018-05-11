@@ -612,10 +612,6 @@ type Stream struct {
 	byteval byte   // value of single byte in type tag
 	kinderr error  // error from last readKind
 	stack   []listpos
-
-	origR io.Reader
-	inputLimit uint64
-	val interface{}
 }
 
 type listpos struct{ pos, size uint64 }
@@ -834,10 +830,6 @@ func (s *Stream) Decode(val interface{}) error {
 // If r does not also implement ByteReader, Stream will do its own
 // buffering.
 func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
-	//s.origR = r
-
-	//s.inputLimit = inputLimit
-
 	if inputLimit > 0 {
 		s.remaining = inputLimit
 		s.limited = true
@@ -869,15 +861,6 @@ func (s *Stream) Reset(r io.Reader, inputLimit uint64) {
 	if s.uintbuf == nil {
 		s.uintbuf = make([]byte, 8)
 	}
-}
-
-func (s *Stream) Clone() *Stream {
-	s2 := new(Stream)
-
-	s2.Reset(s.origR, s.inputLimit)
-	s2.kind = List
-	s2.size = s.inputLimit
-	return s2
 }
 
 // Kind returns the kind and size of the next value in the
