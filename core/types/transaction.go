@@ -399,6 +399,7 @@ func (tx *Transaction) String() string {
 	From:     %s
 	To:       %s
 	Nonce:    %v
+	TxType:    %v
 	GasPrice: %#x
 	GasLimit  %#x
 	Value:    %#x
@@ -413,6 +414,7 @@ func (tx *Transaction) String() string {
 		from,
 		to,
 		tx.data.AccountNonce,
+		tx.data.Txtype,
 		tx.data.Price,
 		tx.data.GasLimit,
 		tx.data.Amount,
