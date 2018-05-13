@@ -552,6 +552,9 @@ func (env *Work) commitTransactions(mux *event.TypeMux, txs *types.TransactionsB
 		env.state.Prepare(tx.Hash(), common.Hash{}, env.tcount)
 
 		err, logs := env.commitTransaction(tx, bc, coinbase, gp)
+		if (err) {
+			log.Info("error", tx.String())
+		}
 		switch err {
 		case core.ErrGasLimitReached:
 			// Pop the current out-of-gas transaction without shifting in the next from the account
