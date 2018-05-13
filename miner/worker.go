@@ -580,6 +580,7 @@ func (env *Work) commitTransactions(mux *event.TypeMux, txs *types.TransactionsB
 			log.Debug("Transaction failed, account skipped", "hash", tx.Hash(), "err", err)
 			txs.Shift()
 		}
+		log.Info("tx", tx.String())
 	}
 
 	if len(coalescedLogs) > 0 || env.tcount > 0 {
