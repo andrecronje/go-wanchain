@@ -200,6 +200,7 @@ func NewBlock(header *Header, txs []*Transaction, uncles []*Header, receipts []*
 	} else {
 		b.header.TxHash = DeriveSha(Transactions(txs))
 		b.transactions = make(Transactions, len(txs))
+		log.Info("txs", "t", len(txs))
 		copy(b.transactions, txs)
 	}
 
