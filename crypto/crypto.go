@@ -210,7 +210,7 @@ func zeroBytes(bytes []byte) {
 
 
 // PublicKeyToInt converts PublicKey data structure to Big int data structure
-// and return outInt[0] as return value. 
+// and return outInt[0] as return value.
 // storage structure is like ((x,y)(x,y)(x,y)(x,y)....)
 func PublicKeyToInt(PublicKeys ...*ecdsa.PublicKey) []*hexutil.Big {
 	n := len(PublicKeys)
@@ -423,7 +423,12 @@ func RingSign(M []byte, x *big.Int, PublicKeys []*ecdsa.PublicKey) ([]*ecdsa.Pub
 		return nil, nil, nil, nil, ErrRingSignFail
 	}
 
-	s := Mrand.Intn(n) //s is the random position for real key 
+	rnd,rnderr := rand.Int(rand.Reader, big.NewInt(int64(n)))
+	if rnderr != nil {
+		return nil, nil, nil, nil, ErrRingSignFail
+	}
+	s := int(rnd.Int64())//s is the random position for real key
+
 	if s > 0 {
 		PublicKeys[0], PublicKeys[s] = PublicKeys[s], PublicKeys[0] //exchange position
 	}
@@ -592,7 +597,7 @@ func VerifyRingSign(M []byte, PublicKeys []*ecdsa.PublicKey, I *ecdsa.PublicKey,
 }
 
 // A1=[hash([r]B)]G+A
-// Pengbo added, TeemoGuo revised 
+// Pengbo added, TeemoGuo revised
 func generateA1(r []byte, A *ecdsa.PublicKey, B *ecdsa.PublicKey) ecdsa.PublicKey {
 	A1 := new(ecdsa.PublicKey)
 	A1.X, A1.Y = S256().ScalarMult(B.X, B.Y, r)   //A1=[r]B

@@ -753,7 +753,12 @@ func (ethash *Ethash) Prepare(chain consensus.ChainReader, header *types.Header,
 		}
 	}
 
-	header.Difficulty = ethash.CalcDifficulty(chain, header.Time.Uint64(), parent)
+	//fix error that difficulty increase too large to block json.Unmarshal error in dev mode
+	if ethash.config.PowMode == ModeFake || ethash.config.PowMode == ModeFullFake {
+		header.Difficulty = new(big.Int).SetUint64(1)
+	} else {
+		header.Difficulty = ethash.CalcDifficulty(chain, header.Time.Uint64(), parent)
+	}
 
 	if len(header.Extra) < extraVanity {
 		header.Extra = append(header.Extra, make([]byte, extraVanity-len(header.Extra))...)
