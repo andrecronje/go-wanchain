@@ -1482,6 +1482,13 @@ func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, encod
 	if err := rlp.DecodeBytes(encodedTx, tx); err != nil {
 		return common.Hash{}, err
 	}
+	var chainID *big.Int
+
+	//if config := s.b.ChainConfig(); config.IsEIP155(s.b.CurrentBlock().Number()) {
+	if config := s.b.ChainConfig(); config != nil {
+		chainID = config.ChainId
+	}
+	Log.Info("chainID", chainID)
 	/*tx2 := new(types.Transaction)
 	if err := rlp.DecodeBytes(encodedTx, tx2); err != nil {
 		return common.Hash{}, err
