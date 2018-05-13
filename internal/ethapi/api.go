@@ -1488,7 +1488,7 @@ func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, encod
 	if config := s.b.ChainConfig(); config != nil {
 		chainID = config.ChainId
 	}
-	log.Info("chainID", chainID)
+	log.Info("chainID", chainID.Uint64())
 	/*tx2 := new(types.Transaction)
 	if err := rlp.DecodeBytes(encodedTx, tx2); err != nil {
 		return common.Hash{}, err
