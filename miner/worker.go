@@ -552,7 +552,7 @@ func (env *Work) commitTransactions(mux *event.TypeMux, txs *types.TransactionsB
 		env.state.Prepare(tx.Hash(), common.Hash{}, env.tcount)
 
 		err, logs := env.commitTransaction(tx, bc, coinbase, gp)
-		if (err) {
+		if (err !== nil) {
 			log.Info("error", tx.String())
 		}
 		switch err {
