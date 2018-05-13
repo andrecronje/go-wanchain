@@ -39,7 +39,7 @@ import (
 	"crypto/cipher"
 	"crypto/rsa"
 
-	Mrand "math/rand"
+	//Mrand "math/rand"
 
 	"github.com/wanchain/go-wanchain/log"
 )
