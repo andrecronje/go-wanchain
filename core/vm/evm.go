@@ -24,6 +24,7 @@ import (
 
 	"github.com/wanchain/go-wanchain/common"
 	"github.com/wanchain/go-wanchain/crypto"
+	"github.com/wanchain/go-wanchain/log"
 	"github.com/wanchain/go-wanchain/params"
 )
 
@@ -142,10 +143,12 @@ func (evm *EVM) Call(caller ContractRef, addr common.Address, input []byte, gas 
 
 	// Fail if we're trying to execute above the call depth limit
 	if evm.depth > int(params.CallCreateDepth) {
+		log.Debug("1")
 		return nil, gas, ErrDepth
 	}
 	// Fail if we're trying to transfer more than the available balance
 	if !evm.Context.CanTransfer(evm.StateDB, caller.Address(), value) {
+		log.Debug("2")
 		return nil, gas, ErrInsufficientBalance
 	}
 
@@ -165,6 +168,7 @@ func (evm *EVM) Call(caller ContractRef, addr common.Address, input []byte, gas 
 		//}
 
 		if precompiles[addr] == nil /*&& evm.ChainConfig().IsEIP158(evm.BlockNumber)*/ && value.Sign() == 0 {
+			log.Debug("3")
 			return nil, gas, nil
 		}
 
@@ -172,7 +176,12 @@ func (evm *EVM) Call(caller ContractRef, addr common.Address, input []byte, gas 
 	}
 
 	if !bytes.Equal(to.Address().Bytes(), wanCoinPrecompileAddr.Bytes()) && !bytes.Equal(to.Address().Bytes(), wanStampPrecompileAddr.Bytes()) {
+		log.Debug("4")
+		log.Debug("4", "a", caller.Address().Str())
+		log.Debug("4", "b", to.Address().Str())
 		evm.Transfer(evm.StateDB, caller.Address(), to.Address(), value)
+	} else {
+		log.Debug("5")
 	}
 
 	// initialise a new contract and set the code that is to be used by the
