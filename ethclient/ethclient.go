@@ -30,6 +30,7 @@ import (
 	"github.com/wanchain/go-wanchain/core/types"
 	"github.com/wanchain/go-wanchain/rlp"
 	"github.com/wanchain/go-wanchain/rpc"
+	"github.com/wanchain/go-wanchain/log"
 )
 
 // Client defines typed wrappers for the Ethereum RPC API.
