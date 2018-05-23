@@ -23,6 +23,7 @@ import (
 	"github.com/wanchain/go-wanchain/consensus"
 	"github.com/wanchain/go-wanchain/core/types"
 	"github.com/wanchain/go-wanchain/core/vm"
+	"github.com/wanchain/go-wanchain/log"
 )
 
 // ChainContext supports retrieving headers and consensus parameters from the
